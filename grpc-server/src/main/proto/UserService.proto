@@ -1,0 +1,14 @@
+syntax = 'proto3';
+
+// avoid name collisions in the Protocol Buffers name space as well as in non-Java languages
+package io.github.joumenharzli.grpcserver;
+
+// Java package name for the generated classes
+option java_package = "io.github.joumenharzli.grpcserver.proto";
+
+import public "User.proto";
+
+service UserService {
+    rpc save(User) returns (User) {}
+    rpc findByFilters(UserFilters) returns (stream User) {}
+}
