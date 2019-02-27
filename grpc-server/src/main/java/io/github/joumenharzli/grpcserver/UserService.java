@@ -20,15 +20,20 @@ public class UserService extends UserServiceGrpc.UserServiceImplBase {
 
         repository.save(user)
                 .map(mapper::toProto)
-                .subscribe(proto -> {
-                    responseObserver.onNext(proto);
-                    responseObserver.onCompleted();
-                });
+                .doOnNext(responseObserver::onNext)
+                .subscribe(u -> responseObserver.onCompleted());
+
     }
 
     @Override
     public void findByFilters(UserProto.UserFilters request, StreamObserver<UserProto.User> responseObserver) {
-        super.findByFilters(request, responseObserver);
+
+        repository.findAll()
+                .map(mapper::toProto)
+                .doOnNext(responseObserver::onNext)
+                .doOnComplete(responseObserver::onCompleted)
+                .subscribe();
+
     }
 
 
